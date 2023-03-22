@@ -21,22 +21,23 @@
                 </div>
                 <div class="user-pass">
                 <div class="zhanghao-mima">
-                    <img class="userface" src="../assets/user.webp" alt="">
                     <input placeholder="请输入用户名" :style="inputbackground" @blur="inputblur" @focus="inputfocus" v-model="ruleForm.username">
                 </div>
                 <div class="zhanghao-mima">
-                    <img class="password" src="../assets/password1.webp" alt="">
                     <input placeholder="请输入密码" :style="inputbackground" @blur="inputblur" @focus="inputfocus" v-model="ruleForm.password" type="text">
                 </div>
+                <img src="../assets/user.webp" alt="">
                 
                 </div>
                 <div class="denglu-zhuce">
                 <div class="dengluzhuce" @click="denglu" >
-                    <button style="background:rgb(135, 143, 255);" >登录</button>
+                    <img v-if="dengluimg" src="../assets/password1.webp" alt="">
+                    <button @mouseover="dengluimg1" @mouseout="dengluimg2" style="background:rgb(135, 143, 255);" >登录</button>
                     
                 </div>
                 <div class="dengluzhuce"  v-show="!isSystem" @click="zhuce">
-                    <button style="background:rgb(255, 89, 119);" >注册</button>
+                    <img v-if="zhuceimg" src="../assets/password1.webp" alt="">
+                    <button @mouseover="zhuceimg1" @mouseout="zhuceimg2" style="background:rgb(255, 89, 119);" >注册</button>
                     
                 </div>
 
@@ -109,6 +110,8 @@ import img2 from '@/assets/亚托克斯.jpg'
                 username : "",
                 password : "",
             },
+            dengluimg:false,
+            zhuceimg:false,
                 }
         },
         methods:{
@@ -149,6 +152,18 @@ import img2 from '@/assets/亚托克斯.jpg'
             inputblur(){
                 this.inputbackground.background = "rgb(255, 223, 171)"
             },
+            dengluimg1(){
+                this.dengluimg = true
+            },
+            zhuceimg1(){
+                this.zhuceimg = true
+            },
+            dengluimg2(){
+                this.dengluimg = false
+            },
+            zhuceimg2(){
+                this.zhuceimg = false
+            },
 
             denglu(){
                 let _this = this
@@ -173,7 +188,7 @@ import img2 from '@/assets/亚托克斯.jpg'
                 if(this.index >= this.imgArr.length){
                     this.index = 0;
                 }
-                console.log(this.index)
+                // console.log(this.index)
             },
 
 
@@ -311,15 +326,24 @@ html,body{
     /* background-color: rgb(58, 110, 97); */
     position: relative;
 }
+.user-pass img{
+    position: absolute;
+    top: -8%;
+    left: 8%;
+    width: 150px;
+    height: 150px;
+    z-index: 5;
+}
 .zhanghao-mima{
     height: 50%;
     width: 100%;
+    margin-left: 40%;
 }
 .zhanghao-mima input{
     float: left;
     width: 40%;
-    height: 50%;
-    margin-top: 25px;
+    height: 45%;
+    margin-top: 10px;
     outline: none;
     font-size: 24px;
     background: rgb(255, 223, 171);
@@ -331,32 +355,6 @@ html,body{
 .zhanghao-mima input:hover{
     font-size: 20px;
 }
-.userface {
-    float: left;
-    margin-left: 16%;
-    margin-right: 4%;
-    width: 80px;
-    height: 100%;
-}
-.userface:hover{
-    width: 100px;
-    height: 100px;
-    margin-left: 12%;
-    margin-right: 4%;
-    margin-top: -20px;
-}
-.password{
-    float: left;
-    margin-left: 16%;
-    width: 100px;
-    height: 100px;
-}
-.password:hover{
-    margin-left: 12%;
-    width: 120px;
-    height: 120px;
-    margin-top: -20px;
-}
 .denglu-zhuce{
     position: relative;
 }
@@ -364,6 +362,16 @@ html,body{
     width: 100%;
     height: 60px;
     border-left: 2px solid rgb(88, 195, 234);
+    position: relative;
+}
+.dengluzhuce img{
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    top: -34%;
+    left: 22%;
+    /* transform: rotateY(180deg); */
+    transform: rotate(120deg);
 }
 .dengluzhuce button{
     width: 30%;
@@ -375,6 +383,12 @@ html,body{
     border: 0;
     color: rgb(244, 213, 255);
     font-size: 18px;
+    transition-duration: 0.2s;
+}
+.dengluzhuce button:hover{
+    /* opacity: 0.7; */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    color: rgb(255, 255, 255);
 }
 .botright-border{
     position: absolute;
