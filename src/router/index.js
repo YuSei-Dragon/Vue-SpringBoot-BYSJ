@@ -17,7 +17,11 @@ const router = createRouter({
         {
             path:'/zhuce',
             component:()=>import("../components/Zhuce")
-        }
+        },
+        {
+            path:'/userhome',
+            component:()=>("../components/Userhome")
+        },
         
     ]
 })

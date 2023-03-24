@@ -27,6 +27,7 @@
                     <input placeholder="请输入密码" :style="inputbackground" @blur="inputblur" @focus="inputfocus" v-model="ruleForm.password" type="text">
                 </div>
                 <img src="../assets/user.webp" alt="">
+                <div class="tips">{{ tips }}</div>
                 
                 </div>
                 <div class="denglu-zhuce">
@@ -98,6 +99,7 @@ import img2 from '@/assets/亚托克斯.jpg'
             inputbackground:{
                 background:"rgb(255, 223, 171)"
             },
+            tips:"",
             which:true,
             index:0,
             imgArr:[
@@ -148,6 +150,7 @@ import img2 from '@/assets/亚托克斯.jpg'
             },
             inputfocus(){
                 this.inputbackground.background="rgb(255, 116, 78)"
+                this.tips = ""
             },
             inputblur(){
                 this.inputbackground.background = "rgb(255, 223, 171)"
@@ -170,16 +173,40 @@ import img2 from '@/assets/亚托克斯.jpg'
                 if(this.isSystem == false){
                     axios.get('http://localhost:8181/userAdmin/login', {params:_this.ruleForm}).then(function (resp) {
                 
+                        switch(resp.data.code){
+                            case 0:
+                                break
+                            case -1:
+                                _this.tips = "用户名不存在，请重新输入。"
+                                _this.ruleForm.username = ""
+                                _this.ruleForm.password = ""
+                                break
+                            case -2:
+                                _this.tips = "密码错误，请确认账号和密码。"
+                                _this.ruleForm.password = ""
+                                break
+                            default:
+                                                }
                     // console.log(_this.ruleForm)
                     console.log(resp.data)
                 })
                 }else{
                     axios.get('http://localhost:8181/sysAdmin/login', {params:_this.ruleForm}).then(function (resp) {
-                    console.log(resp.data)
+                    
+                        switch(resp.data.code){
+                        case 0:
+                            break
+                        case -1:
+                            break
+                        case -2:
+                            break
+                        default:
+                                            }
+                    // console.log(resp.data)
             })
                 }
-                
             },
+
             zhuce(){
                 router.push('/zhuce')
             },
@@ -354,6 +381,18 @@ html,body{
 }
 .zhanghao-mima input:hover{
     font-size: 20px;
+}
+.tips{
+    /* background: red; */
+    position: absolute;
+    width: 40%;
+    height: 20%;
+    left: 40%;
+    top: 32%;
+    font-size: 14px;
+    text-align: center;
+    line-height: 30px;
+    color: rgb(163, 0, 0);
 }
 .denglu-zhuce{
     position: relative;
