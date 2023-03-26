@@ -97,7 +97,8 @@ import img2 from '@/assets/亚托克斯.jpg'
             },
             
             inputbackground:{
-                background:"rgb(255, 223, 171)"
+                background:"rgb(255, 223, 171)",
+                // color:"rgb(93, 125, 240)",
             },
             tips:"",
             which:true,
@@ -150,10 +151,12 @@ import img2 from '@/assets/亚托克斯.jpg'
             },
             inputfocus(){
                 this.inputbackground.background="rgb(255, 116, 78)"
+                this.inputbackground.color = "rgb(93, 125, 240)"
                 this.tips = ""
             },
             inputblur(){
                 this.inputbackground.background = "rgb(255, 223, 171)"
+                this.inputbackground.color = "rgb(93, 125, 240)"
             },
             dengluimg1(){
                 this.dengluimg = true
@@ -175,6 +178,7 @@ import img2 from '@/assets/亚托克斯.jpg'
                 
                         switch(resp.data.code){
                             case 0:
+                                router.push('/userhome')
                                 break
                             case -1:
                                 _this.tips = "用户名不存在，请重新输入。"
@@ -378,6 +382,7 @@ html,body{
     border-radius: 10px;
     text-indent: 10px;
     transition-duration: 0.5s;
+    /* color: rgb(93, 125, 240); */
 }
 .zhanghao-mima input:hover{
     font-size: 20px;

@@ -8,7 +8,7 @@
 
 <script>
     export default {
-        name:UserHome,
+        name:"Userhome",
         data(){
             return{
 

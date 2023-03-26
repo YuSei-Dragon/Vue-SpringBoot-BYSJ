@@ -20,7 +20,7 @@ const router = createRouter({
         },
         {
             path:'/userhome',
-            component:()=>("../components/Userhome")
+            component:()=>import("../components/Userhome")
         },
         
     ]
