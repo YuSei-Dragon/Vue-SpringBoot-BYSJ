@@ -172,7 +172,10 @@ import img2 from '@/assets/亚托克斯.jpg'
             },
 
             denglu(){
+
+                this.$store.commit('saveIdentify',this.isSystem)
                 let _this = this
+                // console.log(this.$store.state.isSys)
                 if(this.isSystem == false){
                     axios.get('http://localhost:8181/userAdmin/login', {params:_this.ruleForm}).then(function (resp) {
                 
