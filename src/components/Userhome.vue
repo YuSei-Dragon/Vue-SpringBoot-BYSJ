@@ -34,27 +34,33 @@
                     }" 
                     
                     class="cards" v-show="show(search,card)" v-for="card,index in cards" :key="card.id">
-                    <div class="card-up">
-                        <div @mouseout="turnall1" @mouseover="turntopleft(index)" class="fourcorners"></div>
-                        <div @mouseout="turnall1" @mouseover="turntop(index)" class="card-top"></div>
-                        <div @mouseout="turnall1" @mouseover="turntopright(index)" class="fourcorners"></div>
-                    </div>
-                    
-                    <div class="card-mid">
-                        <div @mouseout="turnall1" @mouseover="turnleft(index)" class="card-left"></div>
-                        <div @mouseout="turnall1" @mouseover="turnright(index)" class="card-right"></div>
-                        <div class="clickhere">
-                            {{ card.name }}
-                            <!-- 点此查看
-                            <br>
-                            详细信息 -->
+                    <img class="card-img" :src="index==cardimg?cardimgArr[imgindex]:cardimgArr[0]" alt="">
+                    <div class="card-move">
+                        <div class="card-up">
+                            <div @mouseout="turnall1" @mouseover="turntopleft(index)" class="fourcorners"></div>
+                            <div @mouseout="turnall1" @mouseover="turntop(index)" class="card-top"></div>
+                            <div @mouseout="turnall1" @mouseover="turntopright(index)" class="fourcorners"></div>
+                        </div>
+                        
+                        <div class="card-mid">
+                            <div @mouseout="turnall1" @mouseover="turnleft(index)" class="card-left"></div>
+                            <div @mouseout="turnall1" @mouseover="turnright(index)" class="card-right"></div>
+                            <div  @click="changeimg(index)" class="clickhere">
+                                <div v-show="imgindex==0||index!=cardimg">
+                                    {{ card.name }}
+                                </div>
+                                <!-- 点此查看
+                                <br>
+                                详细信息 -->
+                            </div>
+                        </div>
+                        <div class="card-down">
+                            <div @mouseout="turnall1" @mouseover="turnbotleft(index)" class="fourcorners"></div>
+                            <div @mouseout="turnall1" @mouseover="turnbot(index)" class="card-bot"></div>
+                            <div @mouseout="turnall1" @mouseover="turnbotright(index)" class="fourcorners"></div>
                         </div>
                     </div>
-                    <div class="card-down">
-                        <div @mouseout="turnall1" @mouseover="turnbotleft(index)" class="fourcorners"></div>
-                        <div @mouseout="turnall1" @mouseover="turnbot(index)" class="card-bot"></div>
-                        <div @mouseout="turnall1" @mouseover="turnbotright(index)" class="fourcorners"></div>
-                    </div>
+                    
                 </div>
             </div>
         </div>
@@ -62,6 +68,8 @@
 </template>
 
 <script>
+import img0 from '@/assets/游戏王卡面1.jpg'
+import img1 from '@/assets/三国杀.jpg'
     export default {
         name:"Userhome",
         data(){
@@ -78,6 +86,12 @@
                 topright:-1,
                 botleft:-1,
                 botright:-1,
+                cardimgArr:[
+                    img0,
+                    img1,
+                ],
+                imgindex:0,
+                cardimg : -1,
                 cards:[{
                     "name":"abc",
                     "text":"hello world",
@@ -161,6 +175,7 @@
                 this.turnindex = index
                 this.isback = !this.isback
                 // this.turnbackcss.transform = "rotateY(180deg)"
+                
             },
             turntop(index){
                 this.top = index
@@ -196,6 +211,17 @@
                 this.topright = -1
                 this.botleft = -1
                 this.botright = -1
+            },
+            changeimg(index){
+                this.cardimg = index
+                // console.log(index)
+                if(this.imgindex<=0){
+                    this.imgindex = 1
+                }else{
+                    this.imgindex = 0
+                }
+
+                
             }
         }
         
@@ -226,7 +252,7 @@
 .head{
     width: 100%;
     height: 30%;
-    background-image: linear-gradient(to bottom right,rgb(52, 214, 214),rgb(15, 254, 162));
+    background-image: linear-gradient(to bottom right,rgba(52, 214, 214, 0.155),rgba(15, 254, 162, 0.466));
     position: relative;
 }
 .head-right{
@@ -291,7 +317,7 @@
     height: 60%;
     width: 100%;
     overflow-y:auto;
-    background-image: linear-gradient(to bottom right,rgb(225, 223, 195),rgb(247, 197, 117));
+    background-image: linear-gradient(to bottom right,rgba(225, 223, 195, 0.461),rgba(247, 197, 117, 0.493));
 }
 .cards-center{
     margin: 0 4%;
@@ -306,10 +332,14 @@
     height: 300px;
     float: left;
     margin: 20px;
-    background-color: aquamarine;
+    /* background-color: aquamarine; */
     transition-duration: 0.2s;
     position: relative;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.card-img{
+    width: 100%;
+    height: 100%;
 }
 .turnbackcss{
     transform: rotateY(180deg);
@@ -318,13 +348,13 @@
     float: left;
     width: 50%;
     height: 100%;
-    background-color: azure;
+    /* background-color: azure; */
 }
 .fourcorners{
     float: left;
     width:25%;
     height: 100%;
-    background-color: bisque;
+    /* background-color: bisque; */
 }
 .turntopon{
     transform: rotateX(30deg);
@@ -333,10 +363,17 @@
     float: left;
     width: 50%;
     height: 100%;
-    background-color: azure;
+    /* background-color: azure; */
 }
 .turnboton{
     transform: rotateX(-30deg);
+}
+.card-move{
+    width: 250px;
+    height: 300px;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 .card-up{
     width:100%;
@@ -351,7 +388,7 @@
     position: absolute;
     height: 100%;
     width: 25%;
-    background-color: aqua;
+    /* background-color: aqua; */
     top: 0;
     left: 0;
 }
@@ -362,7 +399,7 @@
     position: absolute;
     height: 100%;
     width: 25%;
-    background-color: aqua;
+    /* background-color: aqua; */
     top: 0;
     right: 0;
 }
