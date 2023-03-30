@@ -8,12 +8,17 @@
             <input v-model="search" placeholder="点此搜索..." class="head-input" type="text">
             <div class="head-right">
                 <div class="uself">
-                    <!-- <img src="../assets/user.webp" alt=""> -->
+                    <img src="../assets/头像.jpg" alt="">
+                    <div class="uself-name">{{ username }}</div>
                 </div>
-                <div class="more">
+                <div @click="moreshow" class="more">
                     <div class="more-svg" >
                         <svg t="1679889089926" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2774" width="60" height="60"><path d="M224 608c-52.928 0-96-43.072-96-96s43.072-96 96-96 96 43.072 96 96-43.072 96-96 96zM512 608c-52.928 0-96-43.072-96-96s43.072-96 96-96 96 43.072 96 96-43.072 96-96 96zM800 608c-52.928 0-96-43.072-96-96s43.072-96 96-96 96 43.072 96 96-43.072 96-96 96z" p-id="2775" fill="#52f2f9"></path></svg>
                     </div> 
+                    <div :style="moreshowlen" @mouseover="moreway" @mouseout="moreaway" class="more-background">
+                        <div class="more1">个人信息</div>
+                        <div @click="backtologin" class="more2">退出登录</div>
+                    </div>
                 </div>
             </div>
             
@@ -53,6 +58,9 @@
                                 <br>
                                 详细信息 -->
                             </div>
+                            <div @click="learnmore(index)" v-show="imgindex==0||index!=cardimg" class="button">
+                                了解更多
+                            </div>
                         </div>
                         <div class="card-down">
                             <div @mouseout="turnall1" @mouseover="turnbotleft(index)" class="fourcorners"></div>
@@ -70,12 +78,18 @@
 <script>
 import img0 from '@/assets/游戏王卡面1.jpg'
 import img1 from '@/assets/三国杀.jpg'
+import axios from 'axios'
+import router from '@/router'
     export default {
         name:"Userhome",
         data(){
             return{
                 search:"",
                 issys : this.$store.state.isSys,
+                moreshowlen:{
+                    height:0,
+                },
+                username:"",
                 turnindex : -1,
                 isback :true,
                 top : -1,
@@ -92,67 +106,9 @@ import img1 from '@/assets/三国杀.jpg'
                 ],
                 imgindex:0,
                 cardimg : -1,
-                cards:[{
-                    "name":"abc",
-                    "text":"hello world",
-                    "id":1,
-                },
-                {
-                    "name":"abc1",
-                    "text":"hello world1",
-                    "id":2,
-                },
-                {
-                    "name":"abc2",
-                    "text":"hello world2",
-                    "id":3,
-                },
-                {
-                    "name":"abc3",
-                    "text":"hello world3",
-                    "id":4,
-                },
-                {
-                    "name":"abc",
-                    "text":"hello world",
-                    "id":1,
-                },
-                {
-                    "name":"abc1",
-                    "text":"hello world1",
-                    "id":2,
-                },
-                {
-                    "name":"abc2",
-                    "text":"hello world2",
-                    "id":3,
-                },
-                {
-                    "name":"abc3",
-                    "text":"hello world3",
-                    "id":4,
-                },
-                {
-                    "name":"abc",
-                    "text":"hello world",
-                    "id":1,
-                },
-                {
-                    "name":"abc1",
-                    "text":"hello world1",
-                    "id":2,
-                },
-                {
-                    "name":"abc2",
-                    "text":"hello world2",
-                    "id":3,
-                },
-                {
-                    "name":"abc3",
-                    "text":"hello world3",
-                    "id":4,
-                },
-            ],
+                cards:[
+
+                ],
             turnbackcss:{
                 transform: '',
 
@@ -170,6 +126,18 @@ import img1 from '@/assets/三国杀.jpg'
                     return true
                 }
                 return false
+            },
+            moreshow(){
+                this.moreshowlen = {height:190+'px'}
+            },
+            moreway(){
+                this.moreshowlen = {height: 190+'px'}
+            },
+            moreaway(){
+                this.moreshowlen = {height: 0}
+            },
+            backtologin(){
+                router.push('/login')
             },
             turnback(index){
                 this.turnindex = index
@@ -220,9 +188,24 @@ import img1 from '@/assets/三国杀.jpg'
                 }else{
                     this.imgindex = 0
                 }
+            },
+            learnmore(index){
+                // this.$store.commit('saveClasses',this.cards[index])
+                localStorage.setItem("class",this.cards[index])
+                router.push('/learnclass')
+            },
+            init(){
+                this.username = localStorage.getItem("username")
+                let _this = this
+                axios.get('http://localhost:8181/class/search').then(function(resp){
+                    // console.log(resp.data)
+                    _this.cards = resp.data
 
-                
+                })
             }
+        },
+        mounted(){
+            this.init()
         }
         
     }
@@ -237,6 +220,7 @@ import img1 from '@/assets/三国杀.jpg'
 .header{
     width: 100%;
     height: 10%;
+    text-align: center;
     background-image: linear-gradient(to bottom right,rgb(41, 121, 150),rgb(97, 192, 197));
 
     border-bottom: 2px solid rgb(255, 244, 123);
@@ -261,7 +245,6 @@ import img1 from '@/assets/三国杀.jpg'
     right: 0;
     width: 180px;
     height: 30%;
-
 }
 .head-input {
     margin-top: 20px;
@@ -275,23 +258,39 @@ import img1 from '@/assets/三国杀.jpg'
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .uself{
+    position: relative;
+    text-align: center;
     float: left;
     width: 100px;
     height: 100px;
     background-color: rgb(50, 146, 255);
     border-radius: 100%;
+    overflow: hidden;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+.uself-name{
+    font-size: 18px;
+    position: absolute;
+    left: 5%;
+    top: 8%;
+    width: 90%;
+    height: 25%;
+    border-radius: 5px;
+    margin-top: 60%;
+    color: rgb(172, 243, 65);
+    /* color */
+    background-color: rgba(193, 35, 170, 0.477);
+}
 .uself img {
-    width: 76%;
-    height: 76%;
-    margin-top: 10%;
-    margin-left: 12%;
+    width: 140%;
+    height: 250%;
+    margin-left: -20%;
 }
 .more{
     float: right;
     width:60px;
     height: 60px;
+    position: relative;
     background-image: linear-gradient(to bottom right,rgb(235, 150, 213),rgb(234, 50, 133));
     border-radius: 100%;
     margin-top: 20px;
@@ -305,6 +304,47 @@ import img1 from '@/assets/三国杀.jpg'
     width: 64px;
     margin-right: 8px;
     height: 64px;
+}
+.more-background{
+    /* height: 190px; */
+    height: 0;
+    width: 64px;
+    position: absolute;
+    top: 0px;
+    left: -2px;
+    background-color: rgba(235, 136, 224, 0.059);
+    border-radius: 64px;
+    transition-duration: 0.3s;
+    overflow: hidden;
+    border-left: 2px solid rgb(255, 73, 246);
+    border-right: 2px solid rgb(255, 73, 246);
+}
+.more1{
+    width:100%;
+    height: 40px;
+    margin-top: 70px;
+    background-color: rgba(231, 134, 238, 0.486);
+    font-size: 14px;
+    text-align: center;
+    line-height: 40px;
+}
+.more1:hover{
+    font-size: 16px;
+    background-color: rgba(231, 134, 238, 0.731);
+}
+.more2{
+    border-top: 2px solid rgb(73, 152, 255);
+    border-bottom: 2px solid rgb(73, 152, 255);
+    width: 100%;
+    height: 40px;
+    background-color: rgba(134, 238, 238, 0.489);
+    font-size: 14px;
+    text-align: center;
+    line-height: 40px;
+}
+.more2:hover{
+    font-size: 16px;
+    background-color: rgba(134, 238, 238, 0.863);
 }
 .more-svg{
     transition-duration: 0.3s;
@@ -331,7 +371,7 @@ import img1 from '@/assets/三国杀.jpg'
     width: 250px;
     height: 300px;
     float: left;
-    margin: 20px;
+    margin: 32px;
     /* background-color: aquamarine; */
     transition-duration: 0.2s;
     position: relative;
@@ -383,6 +423,21 @@ import img1 from '@/assets/三国杀.jpg'
     width: 100%;
     height: 50%;
     position: relative;
+}
+.button{
+    position: absolute;
+    top:160%;
+    left: 25%;
+    width: 50%;
+    height: 30px;
+    background-color: rgb(236, 199, 132);
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    line-height: 30px;
+    color: red;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+
 }
 .card-left{
     position: absolute;

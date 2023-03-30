@@ -22,6 +22,10 @@ const router = createRouter({
             path:'/userhome',
             component:()=>import("../components/Userhome")
         },
+        {
+            path:'/learnclass',
+            component:()=>import("../components/LearnClass")
+        },
         
     ]
 })

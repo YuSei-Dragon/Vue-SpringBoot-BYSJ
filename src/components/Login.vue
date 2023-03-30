@@ -174,6 +174,7 @@ import img2 from '@/assets/亚托克斯.jpg'
             denglu(){
 
                 this.$store.commit('saveIdentify',this.isSystem)
+                
                 let _this = this
                 // console.log(this.$store.state.isSys)
                 if(this.isSystem == false){
@@ -181,6 +182,7 @@ import img2 from '@/assets/亚托克斯.jpg'
                 
                         switch(resp.data.code){
                             case 0:
+                                localStorage.setItem("username",_this.ruleForm.username)
                                 router.push('/userhome')
                                 break
                             case -1:
