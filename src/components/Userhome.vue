@@ -25,7 +25,7 @@
                         <svg t="1679889089926" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2774" width="60" height="60"><path d="M224 608c-52.928 0-96-43.072-96-96s43.072-96 96-96 96 43.072 96 96-43.072 96-96 96zM512 608c-52.928 0-96-43.072-96-96s43.072-96 96-96 96 43.072 96 96-43.072 96-96 96zM800 608c-52.928 0-96-43.072-96-96s43.072-96 96-96 96 43.072 96 96-43.072 96-96 96z" p-id="2775" fill="#52f2f9"></path></svg>
                     </div> 
                     <div :style="moreshowlen" @mouseover="moreway" @mouseout="moreaway" class="more-background">
-                        <div class="more1">个人信息</div>
+                        <div @click="usermessage" class="more1">个人信息</div>
                         <div @click="backtologin" class="more2">退出登录</div>
                     </div>
                 </div>
@@ -160,6 +160,9 @@ import router from '@/router'
             moreaway(){
                 this.moreshowlen = {height: 0}
             },
+            usermessage(){
+                router.push('./usermessage')
+            },  
             backtologin(){
                 router.push('/login')
             },
