@@ -10,7 +10,7 @@
                     <div class="classname-cn">课程名称</div>
                     <div class="classname-en">Course Name</div>
                 </div>
-                <div class="classname">{{ classes.name }}</div>
+                <div class="classname">{{ classname }}</div>
             </div>
 
             <div class="head-right">
@@ -23,7 +23,7 @@
                         <svg t="1679889089926" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2774" width="60" height="60"><path d="M224 608c-52.928 0-96-43.072-96-96s43.072-96 96-96 96 43.072 96 96-43.072 96-96 96zM512 608c-52.928 0-96-43.072-96-96s43.072-96 96-96 96 43.072 96 96-43.072 96-96 96zM800 608c-52.928 0-96-43.072-96-96s43.072-96 96-96 96 43.072 96 96-43.072 96-96 96z" p-id="2775" fill="#52f2f9"></path></svg>
                     </div> 
                     <div :style="moreshowlen" @mouseover="moreway" @mouseout="moreaway" class="more-background">
-                        <div class="more1">个人信息</div>
+                        <div @click="usermessage" class="more1">个人信息</div>
                         <div @click="backtologin" class="more2">退出登录</div>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
             <div class="jianjie">
                 <div style="height:100px"></div>
                 <div class="jianjie-title">课程简介</div>
-                <div class="jianjie-text">{{ classes.text }}</div>
+                <div class="jianjie-text">{{ classtext }}</div>
 
             </div>
 
@@ -42,7 +42,7 @@
                 <div class="discuss-show">
                     <div class="everydic" v-for="dic in discusses" :key="dic.id">{{ dic }}</div>
                 </div>
-                <input placeholder="在此发表你对该课程的看法..." v-model="discussinput" class="discuss-input">
+                <input :style="inputcss" @blur="inputend" @focus="inputsm" placeholder="在此发表你对该课程的看法..." v-model="discussinput" class="discuss-input">
                 <div class="discuss-buttons">
                     <button @click="submmit">发送</button>
                     <button>清除</button>
@@ -73,16 +73,24 @@ import router from '@/router'
                 moreshowlen:{
                     height:0,
                 },
-                classes:{
-                    name:this.$store.state.classes.name,
-                    text:this.$store.state.classes.text,
-                },
+                inputcss:{},
+                // classes:{
+                //     name:this.$store.state.classes.name,
+                //     text:this.$store.state.classes.text,
+                // },
                 // discusses:["dasdsadsad","egewdsgdsds","dscbhrfhsg","aegwwsagage",
                 // "dasdsadsad","egewdsgdsds","dscbhrfhsg","aegwwsagage",
                 // "dasdsadsad","egewdsgdsds","dscbhrfhsg","aegwwsagage",
                 // "dasdsadsad","egewdsgdsds","dscbhrfhsg","aegwwsagage",],
                 discusses:[],
                 discussinput: "",
+                classname: "",
+                username:"",
+                subdiscuss:{
+                    text:"",
+                    classes:"",
+                    user:"",
+                }
             }
         },
         methods:{
@@ -95,25 +103,52 @@ import router from '@/router'
             moreaway(){
                 this.moreshowlen = {height: 0}
             },
+            usermessage(){
+                router.push('./usermessage')
+            },  
             backtologin(){
                 router.push('/login')
             },
+            inputsm(){
+                this.inputcss = {boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}
+            },
+            inputend(){
+                this.inputcss = {}
+            },
             submmit(){
                 this.discusses.reverse()
-                this.discusses.push(this.discussinput)
+                this.discusses.push(this.username+ " : " + this.discussinput)
+                this.subdiscuss.text = this.discussinput
+                this.subdiscuss.classes = this.classname
+                this.subdiscuss.user = this.username
                 this.discusses.reverse()
                 this.discussinput = ""
-                let _this = this
-                axios.post('http://localhost:8181/class/search').then(function(resp){
-                    // console.log(resp.data)
-                    _this.cards = resp.data
 
+                
+                let _this = this
+                axios.post('http://localhost:8181/discuss/submit',_this.subdiscuss).then(function(resp){
+                    console.log(resp.data)
+                })
+            },
+            init(){
+                this.username = localStorage.getItem("username")
+                this.classtext = localStorage.getItem("text")
+                this.classname = localStorage.getItem("class")
+                let _this = this
+                axios.get('http://localhost:8181/discuss/getdiscuss', {params:{"classname":_this.classname}}).then(function(resp){
+                    // console.log(resp.data)
+                    for(let mes of resp.data){
+                        // console.log(mes.user + ":" +  mes.text)
+                        const addmes = mes.user + " : "+ mes.text
+                        _this.discusses.push(addmes)
+                    }
+                    _this.discusses.reverse()
                 })
             },
         },
         mounted(){
+            this.init()
 
-              this.discusses.reverse()
         }
     }
 </script>
@@ -130,7 +165,7 @@ import router from '@/router'
     height: 10%;
     text-align: center;
     background-image: linear-gradient(to bottom right,rgb(41, 121, 150),rgb(97, 192, 197));
-
+    
     border-bottom: 2px solid rgb(255, 244, 123);
     /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
 }
@@ -146,6 +181,7 @@ import router from '@/router'
     height: 30%;
     background-image: linear-gradient(to bottom right,rgba(52, 214, 214, 0.155),rgba(15, 254, 162, 0.466));
     position: relative;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .head-left{
     width: 100%;
@@ -196,6 +232,7 @@ import router from '@/router'
     height: 100px;
     background-color: rgb(50, 146, 255);
     border-radius: 100%;
+    border:2px solid rgb(142, 0, 225);
     overflow: hidden;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
@@ -291,9 +328,13 @@ import router from '@/router'
 }
 .jianjie{
     float: left;
-    width: 50%;
+    width: 40%;
+    /* margin-right: 10%; */
     height: 100%;
+    padding-right: 10%;
     /* background-color: aqua; */
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    
 }
 .jianjie-title{
     width: 200px;
@@ -310,19 +351,23 @@ import router from '@/router'
 }
 .discuss{
     float: left;
-    width: 50%;
+    width: 30%;
+    margin-left: 20%;
     height: 100%;
     /* background-color: aquamarine; */
+    
 }
 .discuss-show{
     width: 100%;
     height: 40%;
     margin-top: 5%;
-    background-color: aquamarine;
+    /* background-color: aquamarine; */
+    background-image: linear-gradient(to bottom right,rgb(249, 233, 245),rgb(246, 152, 194));
     border-radius: 5%;
     overflow: auto;
     display: flex;
     flex-direction: column-reverse;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .discuss-input{
     width: 90%;
@@ -333,26 +378,36 @@ import router from '@/router'
     background-color: bisque;
     outline: none;
     border: none;
-    font-size: 30px;
+    font-size: 1.2rem;
     text-indent: 5px;
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
 }
 .discuss-buttons{
     width: 100%;
     height: 5%;
     margin-top: 2%;
-    background-color: aqua;
+    /* background-color: aqua; */
     border-radius: 5%;
 }
 .discuss-buttons button{
-    width: 20%;
+    width: 35%;
     height: 100%;
-    margin-left: 20%;
+    margin-left: 10%;
     cursor: pointer;
+    background-color: rgb(237, 109, 194);
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
+}
+.discuss-buttons button:hover{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .everydic{
     font-size: 20px;
-    margin-top: 5px;
-    background-color: aqua;
-    margin-left: 10px;
+    margin-bottom: 10px;
+    /* background-color: aqua; */
+    margin-left: 20px;
 }
 </style>
