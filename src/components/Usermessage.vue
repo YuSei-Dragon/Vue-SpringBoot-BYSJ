@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import axios from 'axios'
     export default {
         data(){
             return{
@@ -62,6 +63,11 @@
                 showchoice:1,
                 oldpassword:"",
                 newpassword:"",
+                ruleForm:{
+                username : "",
+                oldpassword:"",
+                newpassword : "",
+            },
             }   
         },
         methods:{
@@ -73,10 +79,52 @@
                 this.newpassword = ""
             },
             changesubmit(){
-                if(this.oldpassword==this.newpassword){
-
-                    this.clear()
+                if(this.oldpassword==''){
+                    this.showtips('旧密码未输入！','旧密码输入有误','请重新输入旧密码')
                 }
+                else if(this.newpassword==''){
+                    this.showtips('新密码未输入！','新密码输入有误','请重新输入新密码')
+                }
+                
+                else if(this.oldpassword==this.newpassword){
+                    this.showtips('新密码不能与旧密码相同','新密码输入有误','请重新输入新密码')
+                }
+                else{
+                    this.ruleForm.oldpassword = this.oldpassword
+                    this.ruleForm.username = this.username
+                    this.ruleForm.newpassword = this.newpassword
+                    let _this = this
+                    axios.get('http://localhost:8181/userAdmin/changepassword',{params:_this.ruleForm}).then(function(resp){
+                        if(resp)
+                        {
+                            console.log(resp.data.code)
+                            if(resp.data.code==0){
+                                console.log("修改成功")
+                                _this.showtips('密码修改成功','修改完成','密码修改已完成！')
+                                _this.clear()
+                            }
+                            else{
+                                console.log("出现未知错误")
+                            }
+                            
+                        }
+                        
+                    })
+                }
+
+                
+                // this.clear()
+            },
+            showtips(text,title,mes){
+                this.$alert(text,title,{
+                        confirmButtonText:'确认',
+                        callback:action=>{
+                            this.$message({
+                                type:'info',
+                                message:mes,
+                            })
+                        }
+                    })
             },
             init(){
                 this.username = localStorage.getItem("username")

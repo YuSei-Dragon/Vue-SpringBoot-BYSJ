@@ -39,6 +39,7 @@
             </div>
 
             <div class="discuss">
+                <div @click="classcollect" class="collect">{{ collect }}</div>
                 <div class="discuss-show">
                     <div class="everydic" v-for="dic in discusses" :key="dic.id">{{ dic }}</div>
                 </div>
@@ -73,6 +74,7 @@ import router from '@/router'
                 moreshowlen:{
                     height:0,
                 },
+                collect:"收藏",
                 inputcss:{},
                 // classes:{
                 //     name:this.$store.state.classes.name,
@@ -90,9 +92,20 @@ import router from '@/router'
                     text:"",
                     classes:"",
                     user:"",
-                }
+                },
+                addcollect:{
+                    username:"",
+                    classname:"",
+                },
             }
         },
+        // watch:{
+        //     collect(val){
+        //         this.$nextTick(()=>{
+        //             this.collect = val
+        //         })
+        //     }
+        // },
         methods:{
             moreshow(){
                 this.moreshowlen = {height:190+'px'}
@@ -108,6 +121,35 @@ import router from '@/router'
             },  
             backtologin(){
                 router.push('/login')
+            },
+            classcollect(){
+                    this.addcollect.username = this.username
+                    this.addcollect.classname = this.classname
+
+                    let _this = this
+                if(this.collect!="已收藏"){
+                    
+                axios.post('http://localhost:8181/collect/addcollect',_this.addcollect).then(function(resp){
+                    // console.log(resp.data)
+                    if(resp.data.code == 0){
+                        _this.collect = "已收藏"
+                    }else{
+                        console.log("未知错误，add失败")
+                    }
+                })
+                }else{
+                    axios.post('http://localhost:8181/collect/delcollect',_this.addcollect).then(function(resp){
+                    // console.log(resp.data)
+                    if(resp.data.code == 0){
+                        _this.collect = "收藏"
+                    }else{
+                        console.log("未知错误，del失败")
+                    }
+                })
+                }
+
+                
+                // console.log(_this.collect)
             },
             inputsm(){
                 this.inputcss = {boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}
@@ -134,6 +176,8 @@ import router from '@/router'
                 this.username = localStorage.getItem("username")
                 this.classtext = localStorage.getItem("text")
                 this.classname = localStorage.getItem("class")
+                this.addcollect.username = this.username
+                this.addcollect.classname = this.classname
                 let _this = this
                 axios.get('http://localhost:8181/discuss/getdiscuss', {params:{"classname":_this.classname}}).then(function(resp){
                     // console.log(resp.data)
@@ -143,6 +187,14 @@ import router from '@/router'
                         _this.discusses.push(addmes)
                     }
                     _this.discusses.reverse()
+                })
+                axios.post('http://localhost:8181/collect/iscollect' , _this.addcollect).then(function(resp){
+                    // console.log(resp.data)
+                    if(resp.data.code==0){
+                        _this.collect = "收藏"
+                    }else{
+                        _this.collect = "已收藏"
+                    }
                 })
             },
         },
@@ -355,7 +407,20 @@ import router from '@/router'
     margin-left: 20%;
     height: 100%;
     /* background-color: aquamarine; */
-    
+    position: relative;
+}
+.collect{
+    position: absolute;
+    left: -42%;
+    top: 6%;
+    background-color: aqua;
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    cursor: pointer;
+    font-size: 1.6rem;
+    text-align: center;
+    line-height: 100px;
 }
 .discuss-show{
     width: 100%;
