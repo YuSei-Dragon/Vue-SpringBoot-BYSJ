@@ -26,7 +26,13 @@
                 </div>
             </div>
             <div class="mainbody">
-                <div :style="{height:(showchoice==0?'60%':'60px')}" class="mainblock"></div>
+                <div :style="{height:(showchoice==0?'60%':'60px')}" class="mainblock">
+                    <div class="learnrecord">
+                        <div v-for="state in states" :key="state.id" class="learn">
+                            {{ state }}
+                        </div>
+                    </div>
+                </div>
                 <div :style="{height:(showchoice==1?'60%':'60px')}" class="mainblock">
                     <div style="height:20px"></div>
                     <div class="changeinput">
@@ -44,8 +50,20 @@
                         <button @click="clear">重置</button>
                     </div>
                 </div>
-                <div :style="{height:(showchoice==2?'60%':'60px')}" class="mainblock"></div>
-                <div :style="{height:(showchoice==3?'60%':'60px')}" class="mainblock"></div>
+                <div :style="{height:(showchoice==2?'60%':'60px')}" class="mainblock">
+                    <div class="collectclass">
+                        <div class="everycollect" v-for="cloclass,index in collectclasses" :key="cloclass.id">
+                        {{ cloclass }}
+                        </div>
+                    </div>
+                </div>
+                <div :style="{height:(showchoice==3?'60%':'60px')}" class="mainblock">
+                    <div class="word">
+                        <div v-for="word,index in mywords" :key="word.id"  class="words">
+                            {{ word }}
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>
@@ -55,12 +73,16 @@
 
 <script>
 import axios from 'axios'
+import router from '@/router'
     export default {
         data(){
             return{
+                moreshowlen:{
+                    height:0,
+                },
                 username : "",
                 choices:["学习记录","修改密码","收藏课程","我的留言"],
-                showchoice:1,
+                showchoice:0,
                 oldpassword:"",
                 newpassword:"",
                 ruleForm:{
@@ -68,9 +90,27 @@ import axios from 'axios'
                 oldpassword:"",
                 newpassword : "",
             },
+                collectclasses:[],
+                mywords:[],
+                states:[],
             }   
         },
         methods:{
+            moreshow(){
+                this.moreshowlen = {height:190+'px'}
+            },
+            moreway(){
+                this.moreshowlen = {height: 190+'px'}
+            },
+            moreaway(){
+                this.moreshowlen = {height: 0}
+            },
+            usermessage(){
+                router.push('./usermessage')
+            },  
+            backtologin(){
+                router.push('/login')
+            },
             chose(index){
                 this.showchoice = index
             },
@@ -126,8 +166,43 @@ import axios from 'axios'
                         }
                     })
             },
+            getstate(){
+                let _this=this
+                axios.get('http://localhost:8181/states/getmystates',{params:{"username":_this.username}}).then(function(resp){
+                    console.log(resp)
+                    console.log(_this.username)
+                    // _this.collectclasses = resp.data
+                    for(const state of resp.data){
+                        _this.states.push(state.classes +" --- "+state.state )
+                    }
+                })
+                // console.log(_this.states)
+            },
+            getcollect(){
+                let _this=this
+                axios.get('http://localhost:8181/collect/getcollect',{params:{"username":_this.username}}).then(function(resp){
+                    console.log(resp.data)
+                    // _this.collectclasses = resp.data
+                    for(const clo of resp.data){
+                        _this.collectclasses.push(clo.classname)
+                    }
+                })
+            },
+            getmyword(){
+                let _this = this
+                axios.get('http://localhost:8181/discuss/getmydiscuss',{params:{"username":_this.username}}).then(function(resp){
+                    console.log(resp.data)
+                    // _this.collectclasses = resp.data
+                    for(const clo of resp.data){
+                        _this.mywords.push(clo.text+"-----"+clo.classes)
+                    }
+                })
+            },
             init(){
                 this.username = localStorage.getItem("username")
+                this.getcollect()
+                this.getmyword()
+                this.getstate()
             },
 
         },
@@ -280,6 +355,18 @@ import axios from 'axios'
     left: 0;
     background-color: aqua;
 }
+.learnrecord{
+    width: 50%;
+    height: 300px;
+    margin-left: 25%;
+    margin-top: 40px;
+    background-color: aqua;
+}
+.learn{
+    width: 100%;
+    height: 40px;
+    background-color: rgb(255, 127, 249);
+}
 .changeinput{
     width: 30%;
     height: 80px;
@@ -326,6 +413,32 @@ import axios from 'axios'
     cursor: pointer;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     font-size: 1rem;
+}
+.collectclass{
+    width: 50%;
+    height: 300px;
+    background-color: antiquewhite;
+    margin-left: 25%;
+    margin-top: 40px;
+}
+.everycollect{
+    width: 100%;
+    height: 20%;
+    background-color: aquamarine;
+    text-align: center;
+    line-height: 300%;
+}
+.word{
+    width: 50%;
+    height: 300px;
+    margin-left: 25%;
+    margin-top: 40px;
+    background-color: aqua;
+}
+.words{
+    width: 100%;
+    height: 20%;
+    background-color: aquamarine;
 }
 .toprouter{
     width: 120px;

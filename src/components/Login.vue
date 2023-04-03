@@ -204,10 +204,17 @@ import img2 from '@/assets/亚托克斯.jpg'
                     
                         switch(resp.data.code){
                         case 0:
+                                localStorage.setItem("sysname",_this.ruleForm.username)
+                                router.push('/syshome')
                             break
                         case -1:
+                                _this.tips = "用户名不存在，请重新输入。"
+                                _this.ruleForm.username = ""
+                                _this.ruleForm.password = ""
                             break
                         case -2:
+                                _this.tips = "密码错误，请确认账号和密码。"
+                                _this.ruleForm.password = ""
                             break
                         default:
                                             }

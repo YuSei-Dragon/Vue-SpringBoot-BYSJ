@@ -40,6 +40,7 @@
 
             <div class="discuss">
                 <div @click="classcollect" class="collect">{{ collect }}</div>
+                <div @click="finish" class="finish" >{{ isfinish }}</div>
                 <div class="discuss-show">
                     <div class="everydic" v-for="dic in discusses" :key="dic.id">{{ dic }}</div>
                 </div>
@@ -75,6 +76,7 @@ import router from '@/router'
                     height:0,
                 },
                 collect:"收藏",
+                isfinish:'未完成',
                 inputcss:{},
                 // classes:{
                 //     name:this.$store.state.classes.name,
@@ -96,6 +98,11 @@ import router from '@/router'
                 addcollect:{
                     username:"",
                     classname:"",
+                },
+                addstate:{
+                    username:"",
+                    classes:"",
+                    state:"已完成",
                 },
             }
         },
@@ -148,8 +155,34 @@ import router from '@/router'
                 })
                 }
 
-                
                 // console.log(_this.collect)
+            },
+            finish(){
+                this.addstate.username = this.username
+                this.addstate.classes = this.classname
+                let _this = this
+                if(this.isfinish=="未完成"){
+                    axios.post('http://localhost:8181/states/addmystates',_this.addstate).then(function(resp){
+                    console.log(resp.data)
+                    if(resp.data.code == 0){
+                        _this.isfinish = "已完成"
+                    }else{
+                        console.log("未知错误，add失败")
+                    }
+                })
+                }else{
+                    axios.post('http://localhost:8181/states/delmystates',_this.addstate).then(function(resp){
+                    console.log(resp.data)
+                    if(resp.data.code == 0){
+                        _this.isfinish = "未完成"
+                    }else{
+                        console.log("未知错误，del失败")
+                    }
+                })
+                }
+
+                
+               
             },
             inputsm(){
                 this.inputcss = {boxShadow: "0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)"}
@@ -178,6 +211,8 @@ import router from '@/router'
                 this.classname = localStorage.getItem("class")
                 this.addcollect.username = this.username
                 this.addcollect.classname = this.classname
+                this.addstate.username = this.username
+                this.addstate.classes = this.classname
                 let _this = this
                 axios.get('http://localhost:8181/discuss/getdiscuss', {params:{"classname":_this.classname}}).then(function(resp){
                     // console.log(resp.data)
@@ -194,6 +229,14 @@ import router from '@/router'
                         _this.collect = "收藏"
                     }else{
                         _this.collect = "已收藏"
+                    }
+                })
+                axios.post('http://localhost:8181/states/ismystates' , _this.addstate).then(function(resp){
+                    console.log(resp.data)
+                    if(resp.data.code==0){
+                        _this.isfinish = "已完成"
+                    }else{
+                        _this.isfinish = "未完成"
                     }
                 })
             },
@@ -416,6 +459,19 @@ import router from '@/router'
     background-color: aqua;
     width: 100px;
     height: 100px;
+    border-radius: 100%;
+    cursor: pointer;
+    font-size: 1.6rem;
+    text-align: center;
+    line-height: 100px;
+}
+.finish{
+    position: absolute;
+    left: -42%;
+    top: 22%;
+    height: 100px;
+    width: 100px;
+    background-color: aquamarine;
     border-radius: 100%;
     cursor: pointer;
     font-size: 1.6rem;

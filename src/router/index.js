@@ -30,6 +30,21 @@ const router = createRouter({
             path:'/usermessage',
             component:()=>import("../components/Usermessage")
         },
+        {
+            path:'/syshome',
+            component:()=>import("../components/Syshome"),
+            children:[
+                {
+                    path:'',
+                    component:()=>import("../components/StudentAdd")
+                },
+                {
+                    path:'stdmanage',
+                    component:()=>import("../components/StudentManage")
+                },
+
+            ]
+        },
         
     ]
 })
