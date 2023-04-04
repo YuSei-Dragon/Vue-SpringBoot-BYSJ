@@ -31,23 +31,23 @@
                 
                 <div @mouseout="little1" @mouseover="bigger1" :style="studentheight1" class="student">
                     <div class="left-main">课程管理</div>
-                    <div class="littleleft">新增课程</div>
-                    <div class="littleleft">处理课程</div>
+                    <div @click="toAddClass" class="littleleft">新增课程</div>
+                    <div @click="toManageClass" class="littleleft">处理课程</div>
                 </div>
                 <div @mouseout="little2" @mouseover="bigger2" :style="studentheight2" class="student">
-                    <div class="left-main">讨论管理</div>
-                    <div class="littleleft">删除讨论</div>
+                    <div  class="left-main">讨论管理</div>
+                    <div @click="toDelDiscuss" class="littleleft">删除讨论</div>
                 </div>
                 <div @mouseout="little3" @mouseover="bigger3" :style="studentheight3" class="student">
                     <div class="left-main">管理员账号</div>
-                    <div class="littleleft">修改密码</div>
-                    <div class="littleleft">增删账号</div>
+                    <div @click="toChangeSys" class="littleleft">修改密码</div>
+                    <div @click="toManageSys" class="littleleft">增删账号</div>
                 </div>
             </div>
             <div class="leftbot" ref="chart"></div>
             
         </div>
-        <router-view class="main">
+        <router-view >
 
         </router-view>
 
@@ -113,6 +113,21 @@ import axios from 'axios'
             },
             toManageStudent(){
                 router.push('/syshome/stdmanage')
+            },
+            toAddClass(){
+                router.push('/syshome/classadd')
+            },  
+            toManageClass(){
+                router.push('/syshome/classmanage')
+            },
+            toDelDiscuss(){
+                router.push('/syshome/discussdel')
+            },
+            toChangeSys(){
+                router.push('/syshome/syschange')
+            },
+            toManageSys(){
+                router.push('/syshome/sysmanage')
             },
 
             getOption(){
@@ -340,11 +355,11 @@ import axios from 'axios'
     height: 30%;
     transform: rotateY(180deg);
 }
-.main{
+/* .main{
     float: left;
     height: 100%;
     width: 80%;
     background-color: rgb(244, 238, 214);
-}
+} */
 
 </style>

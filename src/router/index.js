@@ -42,6 +42,22 @@ const router = createRouter({
                     path:'stdmanage',
                     component:()=>import("../components/StudentManage")
                 },
+                {
+                    path:'classadd',
+                    component:()=>import("../components/ClassAdd")
+                },{
+                    path:'classmanage',
+                    component:()=>import("../components/ClassManage")
+                },{
+                    path:'discussdel',
+                    component:()=>import("../components/DiscussDel")
+                },{
+                    path:'syschange',
+                    component:()=>import("../components/SysChange")
+                },{
+                    path:'sysmanage',
+                    component:()=>import("../components/Sysmanage")
+                }
 
             ]
         },

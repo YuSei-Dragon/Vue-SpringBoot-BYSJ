@@ -1,13 +1,17 @@
 <template>
     <div class="mainbody">
         <div style="height: 20%;"></div>
-        <div class="text-input">
+        <!-- <div class="text-input">
             <div class="text">账号</div>
             <input @focus="cleartip" placeholder="请输入账号..." v-model="UserAdmin.userName" type="text">
+        </div> -->
+        <div class="text-input">
+            <div class="text">老密码</div>
+            <input @focus="cleartip" placeholder="请输入老密码..." v-model="UserAdmin.userOldPassword" type="text">
         </div>
         <div class="text-input">
-            <div class="text">密码</div>
-            <input @focus="cleartip" placeholder="请输入密码..." v-model="UserAdmin.userPassword" type="text">
+            <div class="text">新密码</div>
+            <input @focus="cleartip" placeholder="请输入新密码..." v-model="UserAdmin.userNewPassword" type="text">
         </div>
         <div class="text-input">
             <button @click="submit">确认</button>
@@ -15,7 +19,7 @@
         </div>
     </div>
     <div class="pagename">
-        新增学生账号
+        修改管理员密码
     </div>
     <div class="tips">
         {{ tips }}
@@ -29,34 +33,37 @@ import axios from 'axios'
             return{
                 UserAdmin:{
                     userName:"",
-                    userPassword:"",
+                    userOldPassword:"",
+                    userNewPassword:"",
                 },
                 tips:"",
             }
         },
         methods:{
             submit(){
-                if(this.UserAdmin.userName==""){
-                    this.tip("用户名不能为空")
+                this.UserAdmin.userName = localStorage.getItem("sysname")
+                console.log(this.UserAdmin)
+                if(this.UserAdmin.userOldPassword==""){
+                    this.tip("老密码不能为空")
                     // console.log(123321)
                 }
-                else if(this.UserAdmin.userPassword==""){
-                    this.tip("密码不能为空！")
+                else if(this.UserAdmin.userNewPassword==""){
+                    this.tip("新密码不能为空！")
+                }
+                else if(this.UserAdmin.userOldPassword==this.UserAdmin.userNewPassword){
+                    this.tip("新密码不能与老密码相同！")
                 }
                 else{
                      let _this = this
-                    axios.post('http://localhost:8181/userAdmin/tijiao', _this.UserAdmin).then(function(resp){
+                    axios.post('http://localhost:8181/sysAdmin/change', _this.UserAdmin).then(function(resp){
                         if(!resp){
-                            _this.tip("提交失败，检查后台")
+                            _this.tip("修改失败，检查后台")
                         }
                      if(resp.data.code == 0 ){
                         // console.log("提交成功")
-                        _this.tip("新增成功")
+                        _this.tip("修改成功")
                         }
-                    else if(resp.data.code == -2){
-                        _this.tip("此用户名已存在！")
-                        _this.clear()
-                    }else{
+                    else{
                         _this.tip("出现未知错误!")
                     }
                     
@@ -64,8 +71,8 @@ import axios from 'axios'
                 }
             },
             clear(){
-                this.UserAdmin.userName = ""
-                this.UserAdmin.userPassword = ""
+                this.UserAdmin.userOldPassword = ""
+                this.UserAdmin.userNewPassword = ""
             },
             tip(changetip){
                 this.tips = changetip
