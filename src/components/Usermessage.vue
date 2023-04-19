@@ -21,7 +21,7 @@
                 </div>
             </div>
             <div class="toprouter">
-                <div :style="{backgroundColor:(index==showchoice?'red':'blue')}" @click="chose(index)" v-for="choice,index in choices" :key = choice.id class="routerchoice">
+                <div :style="{backgroundColor:(index==showchoice?'#fca88e':'#fff0bf')}" @click="chose(index)" v-for="choice,index in choices" :key = choice.id class="routerchoice">
                     {{ choice }}
                 </div>
             </div>
@@ -353,25 +353,27 @@ import router from '@/router'
     top: 20%;
     margin-left: 13%;
     left: 0;
-    background-color: aqua;
+    /* background-color: aqua; */
 }
 .learnrecord{
     width: 50%;
     height: 300px;
     margin-left: 25%;
     margin-top: 40px;
-    background-color: aqua;
+    background-color: rgb(168, 228, 228);
 }
 .learn{
     width: 100%;
     height: 40px;
+    border-radius: 5px;
+    border-bottom: 1px solid red;
     background-color: rgb(255, 127, 249);
 }
 .changeinput{
     width: 30%;
     height: 80px;
     margin-top: 20px;
-    background-color: brown;
+    background-color: rgb(220, 53, 53);
     margin-left: 35%;
     border-top-right-radius: 25px;
 }
@@ -417,15 +419,17 @@ import router from '@/router'
 .collectclass{
     width: 50%;
     height: 300px;
-    background-color: antiquewhite;
+    background-color: rgb(249, 250, 215);
     margin-left: 25%;
     margin-top: 40px;
 }
 .everycollect{
     width: 100%;
     height: 20%;
-    background-color: aquamarine;
+    background-color: rgb(183, 255, 231);
     text-align: center;
+    border-radius: 5px;
+    border-bottom: 1px solid red;
     line-height: 300%;
 }
 .word{
@@ -433,12 +437,14 @@ import router from '@/router'
     height: 300px;
     margin-left: 25%;
     margin-top: 40px;
-    background-color: aqua;
+    background-color: rgb(143, 237, 237);
 }
 .words{
     width: 100%;
     height: 20%;
     background-color: aquamarine;
+    border-radius: 5px;
+    border-bottom: 1px solid red;
 }
 .toprouter{
     width: 120px;
@@ -461,9 +467,10 @@ import router from '@/router'
 .mainblock{
     width: 100;
     /* height: 60px; */
-    background-color: blueviolet;
+    background-color: rgb(222, 194, 248);
     border-bottom: 2px solid red;
     transition-duration: 0.3s;
+    border-radius: 5px;
     overflow: hidden;
 }
 </style>
