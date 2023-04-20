@@ -367,7 +367,9 @@ import router from '@/router'
     height: 40px;
     border-radius: 5px;
     border-bottom: 1px solid red;
-    background-color: rgb(255, 127, 249);
+    /* background-color: rgb(255, 127, 249); */
+    background-image: linear-gradient(to bottom right,rgb(215, 95, 183),rgb(255, 218, 235));
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .changeinput{
     width: 30%;
@@ -426,25 +428,29 @@ import router from '@/router'
 .everycollect{
     width: 100%;
     height: 20%;
-    background-color: rgb(183, 255, 231);
+    /* background-color: rgb(183, 255, 231); */
+    background-image: linear-gradient(to bottom right,rgb(40, 215, 145),rgb(194, 255, 207));
     text-align: center;
     border-radius: 5px;
     border-bottom: 1px solid red;
     line-height: 300%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .word{
     width: 50%;
     height: 300px;
     margin-left: 25%;
     margin-top: 40px;
-    background-color: rgb(143, 237, 237);
+    background-color: rgb(200, 248, 248);
 }
 .words{
     width: 100%;
     height: 20%;
-    background-color: aquamarine;
+    /* background-color: aquamarine; */
+    background-image: linear-gradient(to bottom right,rgb(57, 217, 204),rgb(146, 240, 242)); 
     border-radius: 5px;
     border-bottom: 1px solid red;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 .toprouter{
     width: 120px;
@@ -467,7 +473,7 @@ import router from '@/router'
 .mainblock{
     width: 100;
     /* height: 60px; */
-    background-color: rgb(222, 194, 248);
+    background-color: rgb(249, 222, 247);
     border-bottom: 2px solid red;
     transition-duration: 0.3s;
     border-radius: 5px;
